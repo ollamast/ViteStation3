@@ -17,9 +17,9 @@
                 {{props.wantedCol.charAt(0).toUpperCase()+props.wantedCol.slice(1)}}
             </li>
         </ul>
-            
-        <XmbColBody :class="{active: props.index == selectedIndexStore.selectedColIndex}" :wantedRow="props.wantedCol"/>
-        
+
+        <XmbColBody :class="{active: props.index == selectedIndexStore.selectedColIndex}" :wantedRow="props.wantedCol" :colIndex="props.index"/>
+
     </ul>
 </template>
 

@@ -12,6 +12,7 @@ useEventListener(document.body, 'keydown', (e) => {
     if (e.key === 'Enter') {
         e.preventDefault()
 
+        startupSound.volume = 0.15
         startupSound.play()
         goNext()
     }
