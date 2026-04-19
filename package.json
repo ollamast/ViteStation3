@@ -12,8 +12,8 @@
         "test:unit": "vitest",
         "lint": "eslint . --fix",
         "format": "prettier --write src/",
-        "deploy": "vite build && cp dist/index.html dist/404.html && git add . && git commit -m 'New prod version' && git push && git subtree push --prefix dist origin prod",
-        "force-deploy": "cp dist/index.html dist/404.html && git add -f dist/ && git commit -m 'New prod version' && git subtree push --prefix dist origin prod"
+        "deploy": "vite build && cp dist/index.html dist/404.html && gh-pages -d dist -b prod",
+        "force-deploy": "cp dist/index.html dist/404.html && gh-pages -d dist -b prod"
     },
     "dependencies": {
         "@vueuse/core": "^14.2.1",
@@ -22,6 +22,7 @@
         "vue-router": "^5.0.4"
     },
     "devDependencies": {
+        "gh-pages": "^6.3.0",
         "@types/node": "^25.6.0",
         "@vitejs/plugin-vue": "^6.0.6",
         "@vue/eslint-config-typescript": "^14.7.0",
