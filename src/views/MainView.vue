@@ -8,8 +8,8 @@
     import { useColumnsStore } from '@/stores/ColumnsStore';
     import { useRowsStore } from '@/stores/RowsStore';
 
-    import XmbColumn from '@/components/XmbColumnComponent.vue'
-    import Clock from '@/components/ClockComponent.vue'
+    import XmbColumn from '@/components/XmbColumn.vue'
+    import XmbClock from '@/components/XmbClock.vue'
     import { onMounted } from "vue";
 
     import navSoundUrl from '@/assets/sounds/nav.mp3'
@@ -148,7 +148,7 @@
 
 <template>
 
-    <Clock />
+    <XmbClock />
 
     <main class="menu" id="menu">
         <!-- <p id="wip">
@@ -180,6 +180,7 @@
 
 
     #xmb
+        z-index: 3
         display: flex
         position: relative
         top: 27%

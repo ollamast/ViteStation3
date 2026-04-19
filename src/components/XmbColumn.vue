@@ -1,6 +1,6 @@
 <script setup lang="ts">
     import { useSelectedIndexStore } from '@/stores/SelectedIndexStore';
-    import XmbColBody from '@/components/XmbColBodyComponent.vue'
+    import XmbColBody from '@/components/XmbColBody.vue'
 
     const props = defineProps(['wantedCol', 'index'])
     const selectedIndexStore = useSelectedIndexStore();

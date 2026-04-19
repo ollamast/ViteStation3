@@ -154,7 +154,7 @@ export const useRowsStore = defineStore('rows', () => {
             },
             {
                 icon: 'disc',
-                text: 'Jak 3',
+                text: 'Jak & Daxter Trilogy',
             },
         ],
         internet: [

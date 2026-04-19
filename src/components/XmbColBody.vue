@@ -1,5 +1,5 @@
 <script setup lang="ts">
-    import XmbRow from '@/components/XmbRowComponent.vue'
+    import XmbRow from '@/components/XmbRow.vue'
     import { useRowsStore } from '@/stores/RowsStore';
 
     const props = defineProps(['wantedRow']),

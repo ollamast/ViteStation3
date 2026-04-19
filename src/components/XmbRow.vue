@@ -1,15 +1,38 @@
 <script setup lang="ts">
-    import { useSelectedIndexStore } from '@/stores/SelectedIndexStore';
+    import { useSelectedIndexStore } from '@/stores/SelectedIndexStore'
+    import { ref, watch } from 'vue'
 
-    const selectedIndexStore = useSelectedIndexStore();
+    const selectedIndexStore = useSelectedIndexStore()
     const props = defineProps(['row', 'index', 'currentCol'])
 
     const iconPath = props.currentCol.split(' ').join('')
+    const isJak = ref(false)
+
+    watch(
+        () => selectedIndexStore.selectedRowIndex,
+        (newIndex, oldIndex) => {
+            if (newIndex === props.index && props.row.icon === 'disc') {
+                setTimeout(() => {
+                    isJak.value = true
+                }, 500)
+            }
+            if (oldIndex === props.index && props.row.icon === 'disc') {
+                isJak.value = false
+            }
+        }
+    )
 </script>
 
 <template>
-    <ul class="xmb_row" id="welcomeTile" :class="{focus: props.index == selectedIndexStore.selectedRowIndex}">
-        <img :src="'/xmb-icons/'+iconPath+'/xmb-'+iconPath+'-'+props.row.icon+'.png'" alt="xmb_folder" class="xmb_row_icons">
+    <ul class="xmb_row" id="welcomeTile" :class="{ focus: props.index == selectedIndexStore.selectedRowIndex }">
+        <Teleport to="body">
+            <Transition name="jak">
+                <img v-if="isJak" src="@/assets/img/jakBg.png" alt="jakBg" id="gameBackground" />
+            </Transition>
+        </Teleport>
+
+        <img v-if="isJak" src="@/assets/img/jakIcon.png" alt="xmb_folder" id="gameIcon" />
+        <img v-else :src="'/xmb-icons/' + iconPath + '/xmb-' + iconPath + '-' + props.row.icon + '.png'" alt="xmb_folder" class="xmb_row_icons" />
         <ul>
             <li class="xmb_row_text">{{ props.row.text }}</li>
             <li class="xmb_row_info" v-if="props.row.info">{{ props.row.info }}</li>
@@ -18,8 +41,8 @@
         <div id="maininfo" v-if="props.row.text == 'Power' && selectedIndexStore.selectedRowIndex == 0">
             <h1>Welcome to ViteStation 3!</h1>
             <p>
-                Navigate through the XMB menu using the arrow keys to have a look around. <br>
-                Updates are coming to make it even better and realistic 🔧 <br>
+                Navigate through the XMB menu using the arrow keys to have a look around. <br />
+                Updates are coming to make it even better and realistic 🔧 <br />
                 <!-- Press Enter/Esc to open/close a menu. <br> -->
                 <!-- You can also navigate with an Xbox controller. <br>
                 Use the D-Pad
@@ -39,7 +62,6 @@
             </p>
             <p>Made with 💖 by Amin Gatta</p>
         </div>
-
     </ul>
 </template>
 
@@ -72,6 +94,24 @@
         margin-left: 20px
         font-size: 14px
 
+    #gameBackground
+        position: absolute
+        left: 0
+        top: 0
+        height: 100%
+        width: 100%
+        object-fit: cover
+
+    .jak-enter-active, .jak-leave-active
+        transition: opacity .2s linear
+
+    .jak-enter-from, .jak-leave-to
+        opacity: 0
+
+    #gameIcon
+        transform: translateX(-25%)
+
+
     #maininfo
         // opacity: 0
         position: absolute
@@ -102,5 +142,4 @@
     .focus
         animation: glow 1s ease-in-out infinite alternate
         scale: 1
-
 </style>
