@@ -10,21 +10,28 @@
 
     import XmbColumn from '@/components/XmbColumn.vue'
     import XmbClock from '@/components/XmbClock.vue'
-    import { onMounted } from 'vue'
+    import { nextTick, onMounted, ref } from 'vue'
 
     import navSoundUrl from '@/assets/sounds/nav.mp3'
+    import trophySoundUrl from '@/assets/sounds/trophy.mp3'
+    import XmbTrophyPopup from '@/components/XmbTrophyPopup.vue'
+    import { useTrophyStore } from '@/stores/trophy.ts'
 
     const welcomeStore = useWelcomeStore(),
         selectedIndexStore = useSelectedIndexStore(),
         columnsStore = useColumnsStore(),
-        rowsStore = useRowsStore()
+        rowsStore = useRowsStore(),
+        trophyStore = useTrophyStore()
 
     if (welcomeStore.isWelcomeValid === false) {
         //useRouter().push('welcome') ---- Keep this as exemple of useRouter()
         router.push('/welcome')
     }
 
-    const navSound = new Audio(navSoundUrl)
+    const navSound = new Audio(navSoundUrl),
+        trophySound = new Audio(trophySoundUrl),
+        showTrophyPopup = ref(false),
+        trophyMsg = ref('')
 
     let xmbMenu: any = null,
         xmbCols: any = '',
@@ -40,6 +47,29 @@
 
     function playNavSound() {
         ;(navSound.cloneNode(true) as HTMLAudioElement).play()
+    }
+
+    const trophyUnlocked = (msg: string, trophyName: string) => {
+        if (!trophyStore.unlocked.includes(trophyName)) {
+            trophySound.volume = 0.3
+            trophySound.play()
+
+            showTrophyPopup.value = true
+            trophyMsg.value = msg
+
+            trophyStore.trophyUnlocked(trophyName)
+
+            setTimeout(() => {
+                showTrophyPopup.value = false
+                trophyMsg.value = ''
+
+                nextTick(() => {
+                    if (trophyStore.unlocked.length === 1) {
+                        trophyUnlocked('Unlock your first trophy', 'first')
+                    }
+                })
+            }, 3000)
+        }
     }
 
     useEventListener(document.body, 'keydown', (e) => {
@@ -64,7 +94,7 @@
 
             up()
         } else if (e.key === 'Enter') {
-            playNavSound()
+            // playNavSound()
             e.preventDefault()
 
             open()
@@ -105,10 +135,10 @@
     }
 
     function open() {
-        // todo : disc, background, browser, trophy
+        // todo : background, browser (trophy browserception), trophy
         switch (Object.values(rowsStore.rows)[selectedIndexStore.selectedColIndex][selectedIndexStore.selectedRowIndex].icon) {
             case 'disc':
-                console.log('disc')
+                trophyUnlocked('Real gamer!', 'game')
                 break
             case 'background':
                 console.log('bg')
@@ -162,6 +192,14 @@
         <section id="xmb">
             <XmbColumn v-for="(col, index) in columnsStore.cols" :key="index" :wantedCol="col" :index="index" />
         </section>
+
+        <Transition name="trophy">
+            <XmbTrophyPopup v-if="showTrophyPopup">
+                <p>
+                    {{ trophyMsg }}
+                </p>
+            </XmbTrophyPopup>
+        </Transition>
     </main>
 </template>
 
@@ -181,6 +219,11 @@
         li,h1,p
             opacity: 80%
 
+    .trophy-enter-active, .trophy-leave-active
+        transition: all .1s ease
+
+    .trophy-enter-from, .trophy-leave-to
+        transform: translateX(100%)
 
     #xmb
         z-index: 3

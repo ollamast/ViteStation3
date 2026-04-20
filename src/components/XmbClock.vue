@@ -1,9 +1,12 @@
 <script setup lang="ts">
     import { onMounted } from 'vue';
+    import { useTrophyStore } from '@/stores/trophy.ts'
 
     onMounted(() => {
         updateClock()
     })
+
+    const trophyStore = useTrophyStore()
 
     let date
 
@@ -25,7 +28,7 @@
         <div class="clock-container">
             <div id="trophy">
                 <img src="/clock-trophy.png" alt="trophy_icon" id="trophy_icon">
-                <p id="score">0</p>
+                <p id="score">{{ trophyStore.unlocked.length }}</p>
             </div>
             <p id="date"></p>
         </div>
